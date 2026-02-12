@@ -81,80 +81,37 @@
             </ul>
           </article>
         </section>
-        {% elif active_page == "members" %}
-        <section class="card" style="margin-top: 14px;">
-          <h2 class="section-title">All Members</h2>
-          <ul class="list">
-            {% for member in members %}
-            <li class="item">
-              <div>
-                <div>{{ member.first_name }} {{ member.last_name }}</div>
-                <div class="muted">{{ member.email }}</div>
-              </div>
-              <div class="muted">{{ member.plan_name }}</div>
-            </li>
-            {% endfor %}
-          </ul>
-        </section>
-        {% elif active_page == "classes" %}
-        <section class="card" style="margin-top: 14px;">
-          <h2 class="section-title">Class Schedule</h2>
-          <ul class="list">
-            {% for class_session in classes %}
-            <li class="item">
-              <div>
-                <div>{{ class_session.title }}</div>
-                <div class="muted">Coach {{ class_session.coach_name }} · Capacity {{ class_session.capacity }}</div>
-              </div>
-              <div class="muted">{{ class_session.starts_at }}</div>
-            </li>
-            {% endfor %}
-          </ul>
-        </section>
-        {% elif active_page == "leads" %}
-        <section class="card" style="margin-top: 14px;">
-          <h2 class="section-title">Lead Pipeline</h2>
-          <ul class="list">
-            {% for lead in leads %}
-            <li class="item">
-              <div>
-                <div><span class="status-dot s-warning"></span>{{ lead.full_name }}</div>
-                <div class="muted">{{ lead.email }}</div>
-              </div>
-              <div class="muted">{{ lead.source }}</div>
-            </li>
-            {% endfor %}
-          </ul>
-        </section>
-        {% elif active_page == "billing" %}
-        <section class="card" style="margin-top: 14px;">
-          <h2 class="section-title">Billing & Invoices</h2>
-          <ul class="list">
-            {% for invoice in invoices %}
-            <li class="item">
-              <div>
-                <div>Invoice #{{ invoice.id }}</div>
-                <div class="muted">Due {{ invoice.due_date }}</div>
-              </div>
-              <div class="muted">${{ "%.2f"|format(invoice.amount) }} · {{ invoice.status }}</div>
-            </li>
-            {% endfor %}
-          </ul>
-        </section>
-        {% elif active_page == "reports" %}
-        <section class="section-grid" style="margin-top: 14px;">
+
+        <section class="section-grid">
           <article class="card">
-            <h2 class="section-title">Revenue Snapshot</h2>
-            <p class="muted">Current MRR: ${{ "%.2f"|format(monthly_revenue) }}</p>
-            <p class="muted">Total invoices: {{ invoices|length }}</p>
+            <h2 class="section-title">Lead pipeline</h2>
+            <ul class="list">
+              {% for lead in leads %}
+              <li class="item">
+                <div>
+                  <div><span class="status-dot s-warning"></span>{{ lead.full_name }}</div>
+                  <div class="muted">{{ lead.email }}</div>
+                </div>
+                <div class="muted">{{ lead.source }}</div>
+              </li>
+              {% endfor %}
+            </ul>
           </article>
+
           <article class="card">
-            <h2 class="section-title">Acquisition Snapshot</h2>
-            <p class="muted">Leads in pipeline: {{ leads|length }}</p>
-            <p class="muted">Active members: {{ members|length }}</p>
+            <h2 class="section-title">Workflow modules</h2>
+            <p class="muted">Core workflows available in this deployment:</p>
+            <div class="pills">
+              <span class="pill">Member CRM</span>
+              <span class="pill">Class Scheduling</span>
+              <span class="pill">Booking Flow</span>
+              <span class="pill">Lead Tracking</span>
+              <span class="pill">Billing & Invoices</span>
+              <span class="pill">KPI Dashboard</span>
+            </div>
+            <p class="footer-note"><span class="status-dot s-success"></span>Ready for Vercel deployment with API + serverless routing.</p>
           </article>
         </section>
-        {% endif %}
       </main>
     </div>
   </body>
