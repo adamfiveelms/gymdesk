@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdamDesk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-950 text-slate-100 min-h-screen">
+    <header class="border-b border-slate-800">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <h1 class="text-xl font-bold">AdamDesk</h1>
+        <span class="text-sm text-slate-300">Deployable Gym SaaS Platform</span>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-8 space-y-8">
+      <section class="grid md:grid-cols-4 gap-4">
+        <div class="bg-slate-900 rounded-xl p-4"><p class="text-xs uppercase">Organization</p><p class="text-xl font-semibold">{{ org.name }}</p></div>
+        <div class="bg-slate-900 rounded-xl p-4"><p class="text-xs uppercase">Members</p><p class="text-3xl font-semibold">{{ members|length }}</p></div>
+        <div class="bg-slate-900 rounded-xl p-4"><p class="text-xs uppercase">Classes Today</p><p class="text-3xl font-semibold">{{ classes|length }}</p></div>
+        <div class="bg-slate-900 rounded-xl p-4"><p class="text-xs uppercase">Leads</p><p class="text-3xl font-semibold">{{ leads|length }}</p></div>
+      </section>
+
+      <section class="grid md:grid-cols-2 gap-6">
+        <div class="bg-slate-900 rounded-xl p-5">
+          <h2 class="font-semibold mb-3">Member Management</h2>
+          <ul class="space-y-2 text-sm">
+            {% for member in members %}
+            <li class="flex justify-between border-b border-slate-800 pb-2"><span>{{ member.first_name }} {{ member.last_name }}</span><span class="text-slate-400">{{ member.plan_name }}</span></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="bg-slate-900 rounded-xl p-5">
+          <h2 class="font-semibold mb-3">Class Scheduling</h2>
+          <ul class="space-y-2 text-sm">
+            {% for class_session in classes %}
+            <li class="border-b border-slate-800 pb-2">
+              <p>{{ class_session.title }} · Coach {{ class_session.coach_name }}</p>
+              <p class="text-slate-400">{{ class_session.starts_at }}</p>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+
+      <section class="bg-slate-900 rounded-xl p-5">
+        <h2 class="font-semibold mb-2">Sales & Lead Workflow</h2>
+        <p class="text-sm text-slate-300 mb-3">Built-in API workflows for leads, bookings, attendance, invoices and KPI dashboard.</p>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <span class="px-2 py-1 rounded bg-indigo-600">Lead Pipeline</span>
+          <span class="px-2 py-1 rounded bg-indigo-600">Membership Billing</span>
+          <span class="px-2 py-1 rounded bg-indigo-600">Class Booking</span>
+          <span class="px-2 py-1 rounded bg-indigo-600">Check-ins</span>
+          <span class="px-2 py-1 rounded bg-indigo-600">Analytics</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
