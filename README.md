@@ -32,11 +32,13 @@ cp .env.example .env
 Required for production:
 
 - `SECRET_KEY`: long random string used to sign JWT tokens.
-- `DATABASE_URL`: PostgreSQL connection string (recommended for production).
+- `DATABASE_URL`: PostgreSQL connection string (required for persistent production data).
 
 Optional:
 
 - `ACCESS_TOKEN_EXPIRE_MINUTES`: JWT expiry window (default: `60`).
+
+> Note: if `DATABASE_URL` is not set, AdamDesk falls back to SQLite at `/tmp/adamdesk.db` for serverless compatibility. This is ephemeral and will reset between cold starts, so use Postgres in production.
 
 ## Production deployment guide
 
