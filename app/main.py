@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from pathlib import Path
-from fastapi import FastAPI, Request, Depends
+
+from fastapi import Depends, FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -9,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.api.routes import router
 from app.core.database import Base, engine, get_db
-from app.models.models import Organization, User, Member, ClassSession, Lead, Invoice
+from app.models.models import ClassSession, Invoice, Lead, Member, Organization, User
 from app.services.auth import hash_password
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -81,20 +82,56 @@ def startup() -> None:
         db.commit()
 
 
-@app.get("/", response_class=HTMLResponse)
-def homepage(request: Request, db: Session = Depends(get_db)):
+def build_dashboard_context(db: Session) -> dict:
     org = db.scalar(select(Organization).where(Organization.name == "AdamDesk Demo Gym"))
     members = db.scalars(select(Member).where(Member.organization_id == org.id)).all() if org else []
     classes = db.scalars(select(ClassSession).where(ClassSession.organization_id == org.id)).all() if org else []
     leads = db.scalars(select(Lead).where(Lead.organization_id == org.id)).all() if org else []
+    invoices = db.scalars(select(Invoice).where(Invoice.organization_id == org.id)).all() if org else []
+    monthly_revenue = float(sum(invoice.amount for invoice in invoices)) if invoices else 0.0
 
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "org": org,
-            "members": members,
-            "classes": classes,
-            "leads": leads,
-        },
-    )
+    return {
+        "org": org,
+        "members": members,
+        "classes": classes,
+        "leads": leads,
+        "invoices": invoices,
+        "monthly_revenue": monthly_revenue,
+    }
+
+
+def render_page(request: Request, db: Session, active_page: str) -> HTMLResponse:
+    context = build_dashboard_context(db)
+    context["request"] = request
+    context["active_page"] = active_page
+    return templates.TemplateResponse(request, "index.html", context)
+
+
+@app.get("/", response_class=HTMLResponse)
+def homepage(request: Request, db: Session = Depends(get_db)):
+    return render_page(request, db, "dashboard")
+
+
+@app.get("/members", response_class=HTMLResponse)
+def members_page(request: Request, db: Session = Depends(get_db)):
+    return render_page(request, db, "members")
+
+
+@app.get("/classes", response_class=HTMLResponse)
+def classes_page(request: Request, db: Session = Depends(get_db)):
+    return render_page(request, db, "classes")
+
+
+@app.get("/leads", response_class=HTMLResponse)
+def leads_page(request: Request, db: Session = Depends(get_db)):
+    return render_page(request, db, "leads")
+
+
+@app.get("/billing", response_class=HTMLResponse)
+def billing_page(request: Request, db: Session = Depends(get_db)):
+    return render_page(request, db, "billing")
+
+
+@app.get("/reports", response_class=HTMLResponse)
+def reports_page(request: Request, db: Session = Depends(get_db)):
+    return render_page(request, db, "reports")

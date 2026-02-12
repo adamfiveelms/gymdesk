@@ -12,12 +12,12 @@
         <div class="brand">AdamDesk</div>
         <div class="tagline">Gym operations platform</div>
         <nav class="nav">
-          <a href="#" class="active">Dashboard</a>
-          <a href="#">Members</a>
-          <a href="#">Classes</a>
-          <a href="#">Leads</a>
-          <a href="#">Billing</a>
-          <a href="#">Reports</a>
+          <a href="/" class="{% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+          <a href="/members" class="{% if active_page == 'members' %}active{% endif %}">Members</a>
+          <a href="/classes" class="{% if active_page == 'classes' %}active{% endif %}">Classes</a>
+          <a href="/leads" class="{% if active_page == 'leads' %}active{% endif %}">Leads</a>
+          <a href="/billing" class="{% if active_page == 'billing' %}active{% endif %}">Billing</a>
+          <a href="/reports" class="{% if active_page == 'reports' %}active{% endif %}">Reports</a>
         </nav>
       </aside>
 
@@ -27,7 +27,7 @@
             <h1 style="margin: 0">{{ org.name if org else "AdamDesk Demo Gym" }}</h1>
             <p class="muted" style="margin: 6px 0 0">Unified CRM, schedule, bookings, and sales pipeline.</p>
           </div>
-          <span class="badge">Live SaaS Preview</span>
+          <span class="badge">{{ active_page|capitalize }}</span>
         </div>
 
         <section class="grid-kpi">
@@ -44,11 +44,12 @@
             <div class="kpi-value">{{ leads|length }}</div>
           </article>
           <article class="card">
-            <div class="kpi-label">Conversion rate</div>
-            <div class="kpi-value">31%</div>
+            <div class="kpi-label">MRR</div>
+            <div class="kpi-value">${{ "%.2f"|format(monthly_revenue) }}</div>
           </article>
         </section>
 
+        {% if active_page == "dashboard" %}
         <section class="section-grid">
           <article class="card">
             <h2 class="section-title">Members</h2>
